@@ -18,8 +18,7 @@ public class TarefaService {
         this.repo = repo;
     }
 
-public List<Tarefa> listar(String q, TodoStatus status, Boolean
-importante, LocalDate ate) {
+public List<Tarefa> listar(String q, TodoStatus status, Boolean importante, LocalDate ate) {
 // Filtro simples combinando alguns critérios básicos
 if (q != null && !q.isBlank()) {
 return repo.findByNomeContainingIgnoreCase(q);
@@ -86,4 +85,6 @@ return repo.findAll();
         Tarefa t = buscarPorId(id);
         repo.delete(t);
     }
+
+   
 }
