@@ -1,6 +1,7 @@
 package br.edu.ifpr.todo.domain.model;
 
 import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,7 +21,7 @@ public class Tarefa {
 
     @Enumerated(EnumType.STRING)
     private TodoStatus status = TodoStatus.A_FAZER;
-    private LocalDate dataCriacao;
+    private LocalDate dataCriacao = LocalDate.now();
     private LocalDate dataEntrega;
     private Boolean importante = false;
 

@@ -1,21 +1,29 @@
 package br.edu.ifpr.todo.api.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import br.edu.ifpr.todo.api.dto.TarefaRequest;
 import br.edu.ifpr.todo.api.dto.TarefaResponse;
 import br.edu.ifpr.todo.domain.model.Tarefa;
 import br.edu.ifpr.todo.domain.model.TodoStatus;
 import br.edu.ifpr.todo.domain.service.TarefaService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tarefas")
-// @CrossOrigin(origins = "*") // Libere se for consumir de um front rodando em outra origem
 public class TarefaController {
 
     private final TarefaService service;
@@ -24,7 +32,7 @@ public class TarefaController {
         this.service = service;
     }
 
-    // ✅ Criar tarefa (POST)
+    //Criar tarefa (POST)
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TarefaResponse criar(@Valid @RequestBody TarefaRequest dto) {
@@ -32,25 +40,22 @@ public class TarefaController {
         return toResponse(salvo);
     }
 
-    // ✅ Listar todas (com filtros opcionais)
+    //Listar todas (GET)
     @GetMapping
     public List<TarefaResponse> listar(
             @RequestParam(required = false) TodoStatus status,
             @RequestParam(required = false) Boolean importante) {
-        return service.listar(null, status, importante, null)
-                .stream()
-                .map(this::toResponse)
-                .collect(Collectors.toList());
+        return service.listar(null, status, importante, null).stream().map(this::toResponse).collect(Collectors.toList());
     }
 
-    // ✅ Buscar por ID
+    //Buscar por ID (GET)
     @GetMapping("/{id}")
     public TarefaResponse buscarPorId(@PathVariable Long id) {
         Tarefa tarefa = service.buscarPorId(id);
         return toResponse(tarefa);
     }
 
-    // ✅ Atualização parcial (PATCH)
+    //Atualização (PATCH)
     @PatchMapping("/{id}")
     public TarefaResponse atualizarParcial(
             @PathVariable Long id,
@@ -59,14 +64,14 @@ public class TarefaController {
         return toResponse(atualizado);
     }
 
-    // ✅ remover
+    //apagar (DELETE    )
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
         service.remover(id);
     }
 
-    // 🔄 Conversor para DTO de resposta
+    //Conversor para DTO de resposta
     private TarefaResponse toResponse(Tarefa salvo) {
         return new TarefaResponse(
                 salvo.getId(),
